@@ -1,0 +1,25 @@
+{
+    "name": "laasti/peels",
+    "description": "A HTTP message middleware stack (request to response) and a generic middleware stack (takes an input and generates an output).",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sonia Marquette",
+            "email": "contact@nebulousweb.com"
+        }
+    ],
+    "require": {
+    },
+    "require-dev": {
+        "zendframework/zend-diactoros": "1.3.3",
+        "laasti/application": "dev-develop"
+    },
+    "suggest": {
+        "laasti/application": "A framework using Peels in its core"
+    },
+    "autoload": {
+        "psr-4": {
+            "Laasti\\Peels\\": "src/"
+        }
+    }
+}
