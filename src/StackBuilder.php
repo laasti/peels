@@ -10,11 +10,11 @@ class StackBuilder implements StackBuilderInterface
     protected $resolver;
     protected $runnerClass;
 
-    public function __construct(MiddlewareResolverInterface $resolver = null, array $middlewares = [], $runnerClass = 'Laasti\Peels\IORunner')
+    public function __construct(MiddlewareResolverInterface $resolver = null, $runnerClass = 'Laasti\Peels\IORunner')
     {
         $this->setResolver($resolver ?: new MiddlewareResolver);
-        $this->setMiddlewares($middlewares);
         $this->setRunnerClass($runnerClass);
+        return $this;
     }
 
     public function setRunnerClass($runnerClass)
