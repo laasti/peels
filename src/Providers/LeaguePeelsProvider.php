@@ -2,7 +2,9 @@
 
 namespace Laasti\Peels\Providers;
 
-class LeaguePeelsProvider extends \League\Container\ServiceProvider
+use League\Container\ServiceProvider\AbstractServiceProvider;
+
+class LeaguePeelsProvider extends AbstractServiceProvider
 {
     protected $provides = [
         'Laasti\Peels\Http\HttpRunner',
