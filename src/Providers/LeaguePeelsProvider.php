@@ -38,26 +38,32 @@ class LeaguePeelsProvider extends AbstractServiceProvider
                 'runner' => 'Laasti\Peels\IORunner',
                 'middlewares' => []
             ];
-            $this->getContainer()->add('peels.stacks.'.$name, 'Laasti\Peels\StackBuilderInterface')
+            $this->getContainer()->share('peels.stacks.'.$name, 'Laasti\Peels\StackBuilderInterface')
                     ->withArguments([$config['resolver'], $config['runner']])
                     ->withMethodCall('setMiddlewares', [$config['middlewares']]);
         }
     }
 
-    public function provides($key)
+    public function provides($alias = null)
     {
-        if (in_array($key, $this->provides)) {
-            return true;
-        }
-
         $stacks = array_keys($this->getConfig());
-        foreach ($stacks as $stack) {
-            if ($key === 'peels.stacks.'.$stack) {
+        if (is_null($alias)) {
+            if (in_array($alias, $this->provides)) {
                 return true;
             }
+
+            foreach ($stacks as $stack) {
+                if ($alias === 'peels.stacks.'.$stack) {
+                    return true;
+                }
+            }
+        }
+        $stacksAlias = [];
+        foreach ($stacks as $stack) {
+            $stacksAlias[] = 'peels.stacks.'.$stack;
         }
 
-        return false;
+        return array_merge($this->provides, $stacksAlias);
     }
 
     protected function getConfig()
