@@ -11,8 +11,9 @@
     "require": {
     },
     "require-dev": {
-        "zendframework/zend-diactoros": "1.3.3",
-        "laasti/application": "dev-develop"
+        "zendframework/zend-diactoros": "~1.3.3",
+        "laasti/application": "dev-develop",
+        "league/container": "~2.0.3"
     },
     "suggest": {
         "laasti/application": "A framework using Peels in its core"
