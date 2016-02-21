@@ -33,19 +33,20 @@ class StackBuilder implements StackBuilderInterface
 
     public function setMiddlewares(array $middlewares)
     {
-        $this->middlewares = $middlewares;
+        $this->middlewares = [];
+        array_walk($middlewares, [$this, 'push']);
         return $this;
     }
 
     public function push($middleware)
     {
-        $this->middlewares[] = $middleware;
+        $this->middlewares[] = $this->resolver->resolve($middleware);
         return $this;
     }
 
     public function unshift($middleware)
     {
-        array_unshift($this->middlewares, $middleware);
+        array_unshift($this->middlewares, $this->resolver->resolve($middleware));
         return $this;
     }
 

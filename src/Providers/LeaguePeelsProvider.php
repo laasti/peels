@@ -16,11 +16,10 @@ class LeaguePeelsProvider extends AbstractServiceProvider
     ];
 
     protected $defaultConfig = [
-        /*'example' => [
-            'resolver' => 'Laasti\Peels\MiddlewareResolverInterface',
-            'runner' => 'Laasti\Peels\IORunner',
-            'middlewares' => []
-        ]*/
+        'builder' => 'Laasti\Peels\StackBuilder',
+        'resolver' => 'Laasti\Peels\MiddlewareResolver',
+        'runner' => 'Laasti\Peels\IORunner',
+        'middlewares' => []
     ];
 
     public function register()
@@ -33,14 +32,10 @@ class LeaguePeelsProvider extends AbstractServiceProvider
         $this->getContainer()->add('Laasti\Peels\StackBuilderInterface', 'Laasti\Peels\StackBuilder')->withArgument('Laasti\Peels\MiddlewareResolverInterface');
 
         foreach ($this->getConfig() as $name => $config) {
-            $config += [
-                'resolver' => 'Laasti\Peels\MiddlewareResolverInterface',
-                'runner' => 'Laasti\Peels\IORunner',
-                'middlewares' => []
-            ];
-            $this->getContainer()->share('peels.stacks.'.$name, 'Laasti\Peels\StackBuilderInterface')
-                    ->withArguments([$config['resolver'], $config['runner']])
-                    ->withMethodCall('setMiddlewares', [$config['middlewares']]);
+            $config += $this->defaultConfig;
+            $this->getContainer()->share('peels.'.$name, $config['builder'])
+                    ->withMethodCall('setMiddlewares', [$config['middlewares']])
+                    ->withArguments([$config['resolver'], new \League\Container\Argument\RawArgument($config['runner'])]);
         }
     }
 
@@ -53,14 +48,14 @@ class LeaguePeelsProvider extends AbstractServiceProvider
             }
 
             foreach ($stacks as $stack) {
-                if ($alias === 'peels.stacks.'.$stack) {
+                if ($alias === 'peels.'.$stack) {
                     return true;
                 }
             }
         }
         $stacksAlias = [];
         foreach ($stacks as $stack) {
-            $stacksAlias[] = 'peels.stacks.'.$stack;
+            $stacksAlias[] = 'peels.'.$stack;
         }
 
         return array_merge($this->provides, $stacksAlias);
@@ -69,8 +64,8 @@ class LeaguePeelsProvider extends AbstractServiceProvider
     protected function getConfig()
     {
         $config = $this->getContainer()->get('config');
-        if (isset($config['peels']) && isset($config['peels']['stacks'])) {
-            return $config['peels']['stacks'];
+        if (isset($config['peels'])) {
+            return $config['peels'];
         }
         return [];
     }
