@@ -8,21 +8,21 @@ class LeaguePeelsProvider extends AbstractServiceProvider
 {
     protected $provides = [
         'Laasti\Peels\Http\HttpRunner',
-        'Laasti\Peels\IORunner',
+        'Laasti\Peels\Runner',
         'Laasti\Peels\MiddlewareResolver',
         'Laasti\Peels\MiddlewareResolverInterface',
     ];
 
     protected $defaultConfig = [
         'resolver' => 'Laasti\Peels\MiddlewareResolver',
-        'runner' => 'Laasti\Peels\IORunner',
+        'runner' => 'Laasti\Peels\Runner',
         'middlewares' => []
     ];
 
     public function register()
     {
         $this->getContainer()->add('Laasti\Peels\Http\HttpRunner')->withArgument('Laasti\Peels\MiddlewareResolverInterface');
-        $this->getContainer()->add('Laasti\Peels\IORunner')->withArgument('Laasti\Peels\MiddlewareResolverInterface');
+        $this->getContainer()->add('Laasti\Peels\Runner')->withArgument('Laasti\Peels\MiddlewareResolverInterface');
         $this->getContainer()->add('Laasti\Peels\MiddlewareResolver')->withArgument('Interop\Container\ContainerInterface');
         $this->getContainer()->add('Laasti\Peels\MiddlewareResolverInterface', 'Laasti\Peels\MiddlewareResolver')->withArgument('Interop\Container\ContainerInterface');
         

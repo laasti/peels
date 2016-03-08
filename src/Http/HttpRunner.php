@@ -3,11 +3,11 @@
 namespace Laasti\Peels\Http;
 
 use Laasti\Peels\IncompleteRunException;
-use Laasti\Peels\IORunner;
+use Laasti\Peels\Runner;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class HttpRunner extends IORunner
+class HttpRunner extends Runner
 {
     /**
      *

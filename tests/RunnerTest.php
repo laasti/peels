@@ -2,7 +2,7 @@
 
 namespace Laasti\Peels\Test;
 
-use Laasti\Peels\IORunner;
+use Laasti\Peels\Runner;
 
 
 class RunnerTest extends \PHPUnit_Framework_TestCase
@@ -10,7 +10,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
     public function testIncompleteRunException()
     {
         $this->setExpectedException('Laasti\Peels\IncompleteRunException');
-        $runner = new IORunner(new \Laasti\Peels\MiddlewareResolver, [
+        $runner = new Runner(new \Laasti\Peels\MiddlewareResolver, [
             function ($x, $y, $this) {
                 return $this($x, $y);
             }
@@ -21,7 +21,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
 
     public function testBaseRunner()
     {
-        $runner = new IORunner(new \Laasti\Peels\MiddlewareResolver, [
+        $runner = new Runner(new \Laasti\Peels\MiddlewareResolver, [
             function ($x, $y, $this) {
                 return $y;
             }
@@ -31,7 +31,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
 
     public function testMultipleRunner()
     {
-        $runner = new IORunner(new \Laasti\Peels\MiddlewareResolver, [
+        $runner = new Runner(new \Laasti\Peels\MiddlewareResolver, [
             function ($x, $y, $this) {
                 $y++;
                 return $this($x, $y);

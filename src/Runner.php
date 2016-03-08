@@ -2,7 +2,7 @@
 
 namespace Laasti\Peels;
 
-class IORunner
+class Runner
 {
     protected $middlewares;
     protected $resolver;
@@ -35,7 +35,7 @@ class IORunner
     public function __invoke($input, $output)
     {
         if (!count($this->middlewares)) {
-            throw new IncompleteRunException('IORunner middleware must return a value before the end.');
+            throw new IncompleteRunException('Runner middleware must return a value before the end.');
         }
 
         $middleware = array_shift($this->middlewares);
