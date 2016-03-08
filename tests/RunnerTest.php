@@ -7,17 +7,10 @@ use Laasti\Peels\IORunner;
 
 class RunnerTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testNoMiddlewares()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-        new IORunner();
-    }
-
     public function testIncompleteRunException()
     {
         $this->setExpectedException('Laasti\Peels\IncompleteRunException');
-        $runner = new IORunner([
+        $runner = new IORunner(new \Laasti\Peels\MiddlewareResolver, [
             function ($x, $y, $this) {
                 return $this($x, $y);
             }
@@ -28,7 +21,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
 
     public function testBaseRunner()
     {
-        $runner = new IORunner([
+        $runner = new IORunner(new \Laasti\Peels\MiddlewareResolver, [
             function ($x, $y, $this) {
                 return $y;
             }
@@ -38,7 +31,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
 
     public function testMultipleRunner()
     {
-        $runner = new IORunner([
+        $runner = new IORunner(new \Laasti\Peels\MiddlewareResolver, [
             function ($x, $y, $this) {
                 $y++;
                 return $this($x, $y);

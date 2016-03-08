@@ -11,12 +11,9 @@ class LeaguePeelsProvider extends AbstractServiceProvider
         'Laasti\Peels\IORunner',
         'Laasti\Peels\MiddlewareResolver',
         'Laasti\Peels\MiddlewareResolverInterface',
-        'Laasti\Peels\StackBuilderInterface',
-        'Laasti\Peels\StackBuilder',
     ];
 
     protected $defaultConfig = [
-        'builder' => 'Laasti\Peels\StackBuilder',
         'resolver' => 'Laasti\Peels\MiddlewareResolver',
         'runner' => 'Laasti\Peels\IORunner',
         'middlewares' => []
@@ -24,18 +21,15 @@ class LeaguePeelsProvider extends AbstractServiceProvider
 
     public function register()
     {
-        $this->getContainer()->add('Laasti\Peels\Http\HttpRunner');
-        $this->getContainer()->add('Laasti\Peels\IORunner');
+        $this->getContainer()->add('Laasti\Peels\Http\HttpRunner')->withArgument('Laasti\Peels\MiddlewareResolverInterface');
+        $this->getContainer()->add('Laasti\Peels\IORunner')->withArgument('Laasti\Peels\MiddlewareResolverInterface');
         $this->getContainer()->add('Laasti\Peels\MiddlewareResolver')->withArgument('Interop\Container\ContainerInterface');
-        $this->getContainer()->add('Laasti\Peels\StackBuilder')->withArgument('Laasti\Peels\MiddlewareResolverInterface');
         $this->getContainer()->add('Laasti\Peels\MiddlewareResolverInterface', 'Laasti\Peels\MiddlewareResolver')->withArgument('Interop\Container\ContainerInterface');
-        $this->getContainer()->add('Laasti\Peels\StackBuilderInterface', 'Laasti\Peels\StackBuilder')->withArgument('Laasti\Peels\MiddlewareResolverInterface');
-
+        
         foreach ($this->getConfig() as $name => $config) {
             $config += $this->defaultConfig;
-            $this->getContainer()->share('peels.'.$name, $config['builder'])
-                    ->withMethodCall('setMiddlewares', [$config['middlewares']])
-                    ->withArguments([$config['resolver'], new \League\Container\Argument\RawArgument($config['runner'])]);
+            $this->getContainer()->share('peels.'.$name, $config['runner'])
+                    ->withArguments([$config['resolver'], $config['middlewares']]);
         }
     }
 

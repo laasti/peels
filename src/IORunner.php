@@ -5,14 +5,31 @@ namespace Laasti\Peels;
 class IORunner
 {
     protected $middlewares;
+    protected $resolver;
 
-    public function __construct(array $middlewares = [])
+    public function __construct(MiddlewareResolverInterface $resolver, array $middlewares = [])
     {
+        $this->resolver = $resolver;
         $this->middlewares = $middlewares;
+    }
 
-        if (!count($this->middlewares)) {
-            throw new \InvalidArgumentException('You must at least define 1 middleware to use with IORunner.');
-        }
+    public function setMiddlewares(array $middlewares)
+    {
+        $this->middlewares = [];
+        array_walk($middlewares, [$this, 'push']);
+        return $this;
+    }
+
+    public function push($middleware)
+    {
+        $this->middlewares[] = $this->resolver->resolve($middleware);
+        return $this;
+    }
+
+    public function unshift($middleware)
+    {
+        array_unshift($this->middlewares, $this->resolver->resolve($middleware));
+        return $this;
     }
 
     public function __invoke($input, $output)

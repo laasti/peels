@@ -2,26 +2,25 @@
 
 namespace Laasti\Peels\Http;
 
-use InvalidArgumentException;
 use Laasti\Peels\IncompleteRunException;
+use Laasti\Peels\IORunner;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class HttpRunner
+class HttpRunner extends IORunner
 {
-    protected $middlewares;
-
-    public function __construct(array $middlewares = [])
+    /**
+     *
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     * @throws IncompleteRunException
+     */
+    public function __invoke($request, $response)
     {
-        $this->middlewares = $middlewares;
-
-        if (!count($this->middlewares)) {
-            throw new InvalidArgumentException('You must at least define 1 middleware to use with HttpRunner.');
+        if (! $request instanceof RequestInterface || ! $response instanceof ResponseInterface) {
+            throw new \InvalidArgumentException('HttpRunner needs its two arguments to be a RequestInterface and a ResponseInterface');
         }
-    }
-
-    public function __invoke(RequestInterface $request, ResponseInterface $response)
-    {
         if (!count($this->middlewares)) {
             throw new IncompleteRunException('HttpRunner middleware must return a response before the end.');
         }

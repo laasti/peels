@@ -8,16 +8,10 @@ use Laasti\Peels\Http\HttpRunner;
 class HttpRunnerTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testNoMiddlewares()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-        new HttpRunner();
-    }
-
     public function testIncompleteRunException()
     {
         $this->setExpectedException('Laasti\Peels\IncompleteRunException');
-        $runner = new HttpRunner([
+        $runner = new HttpRunner(new \Laasti\Peels\MiddlewareResolver, [
             function ($request, $response, $this) {
                 return $this($request, $response);
             }
@@ -28,7 +22,7 @@ class HttpRunnerTest extends \PHPUnit_Framework_TestCase
 
     public function testBaseHttpRunner()
     {
-        $runner = new HttpRunner([
+        $runner = new HttpRunner(new \Laasti\Peels\MiddlewareResolver, [
             function ($request, $response, $this) {
                 return $response;
             }
@@ -38,7 +32,7 @@ class HttpRunnerTest extends \PHPUnit_Framework_TestCase
 
     public function testMultipleHttpRunner()
     {
-        $runner = new HttpRunner([
+        $runner = new HttpRunner(new \Laasti\Peels\MiddlewareResolver, [
             function ($request, $response, $this) {
                 $response = $response->withHeader('test', 'test');
                 return $this($request, $response);
