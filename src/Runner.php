@@ -10,7 +10,7 @@ class Runner
     public function __construct(MiddlewareResolverInterface $resolver, array $middlewares = [])
     {
         $this->resolver = $resolver;
-        $this->middlewares = $middlewares;
+        $this->setMiddlewares($middlewares);
     }
 
     public function setMiddlewares(array $middlewares)
