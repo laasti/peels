@@ -3,8 +3,9 @@
 namespace Laasti\Peels\Providers;
 
 use League\Container\ServiceProvider\AbstractServiceProvider;
+use League\Container\ServiceProvider\BootableServiceProviderInterface;
 
-class LeaguePeelsProvider extends AbstractServiceProvider
+class LeaguePeelsProvider extends AbstractServiceProvider implements BootableServiceProviderInterface
 {
     protected $provides = [
         'Laasti\Peels\Http\HttpRunner',
@@ -27,6 +28,9 @@ class LeaguePeelsProvider extends AbstractServiceProvider
         $this->getContainer()->add('Laasti\Peels\MiddlewareResolverInterface', 'Laasti\Peels\MiddlewareResolver')->withArgument('Interop\Container\ContainerInterface');
         
         foreach ($this->getConfig() as $name => $config) {
+            if ($name === 'inflector') {
+                continue;
+            }
             $config += $this->defaultConfig;
             $this->getContainer()->share('peels.'.$name, $config['runner'])
                     ->withArguments([$config['resolver'], $config['middlewares']]);
@@ -53,6 +57,16 @@ class LeaguePeelsProvider extends AbstractServiceProvider
         }
 
         return array_merge($this->provides, $stacksAlias);
+    }
+
+    public function boot()
+    {
+        $config = $this->getConfig();
+        if (!isset($config['inflector'])) {
+            $config['inflector'] = array_shift(array_keys($config));
+        }
+        $this->getContainer()->inflector('Laasti\Directions\RouterAwareInterface')
+             ->invokeMethod('setRouter', ['peels.'.$config['inflector']]);
     }
 
     protected function getConfig()
