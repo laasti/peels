@@ -63,7 +63,8 @@ class LeaguePeelsProvider extends AbstractServiceProvider implements BootableSer
     {
         $config = $this->getConfig();
         if (!isset($config['inflector'])) {
-            $config['inflector'] = array_shift(array_keys($config));
+            $names = array_keys($config);
+            $config['inflector'] = array_shift($names);
         }
         $this->getContainer()->inflector('Laasti\Directions\RouterAwareInterface')
              ->invokeMethod('setRouter', ['peels.'.$config['inflector']]);
