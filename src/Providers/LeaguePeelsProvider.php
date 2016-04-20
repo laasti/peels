@@ -8,6 +8,7 @@ use League\Container\ServiceProvider\BootableServiceProviderInterface;
 class LeaguePeelsProvider extends AbstractServiceProvider implements BootableServiceProviderInterface
 {
     protected $provides = [
+        'kernel',
         'Laasti\Peels\Http\HttpRunner',
         'Laasti\Peels\Runner',
         'Laasti\Peels\MiddlewareResolver',
@@ -26,7 +27,8 @@ class LeaguePeelsProvider extends AbstractServiceProvider implements BootableSer
         $this->getContainer()->add('Laasti\Peels\Runner')->withArgument('Laasti\Peels\MiddlewareResolverInterface');
         $this->getContainer()->add('Laasti\Peels\MiddlewareResolver')->withArgument('Interop\Container\ContainerInterface');
         $this->getContainer()->add('Laasti\Peels\MiddlewareResolverInterface', 'Laasti\Peels\MiddlewareResolver')->withArgument('Interop\Container\ContainerInterface');
-        
+
+        $first = true;
         foreach ($this->getConfig() as $name => $config) {
             if ($name === 'inflector') {
                 continue;
@@ -34,6 +36,10 @@ class LeaguePeelsProvider extends AbstractServiceProvider implements BootableSer
             $config += $this->defaultConfig;
             $this->getContainer()->share('peels.'.$name, $config['runner'])
                     ->withArguments([$config['resolver'], $config['middlewares']]);
+            if ($first) {
+                $this->getContainer()->share('kernel', 'Laasti\Http\HttpKernel')->withArgument('peels.http');
+                $first = false;
+            }
         }
     }
 
