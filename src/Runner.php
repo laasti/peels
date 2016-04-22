@@ -22,13 +22,13 @@ class Runner
 
     public function push($middleware)
     {
-        $this->middlewares[] = $this->resolver->resolve($middleware);
+        $this->middlewares[] = $middleware;
         return $this;
     }
 
     public function unshift($middleware)
     {
-        array_unshift($this->middlewares, $this->resolver->resolve($middleware));
+        array_unshift($this->middlewares, $middleware);
         return $this;
     }
 
@@ -38,8 +38,8 @@ class Runner
             throw new IncompleteRunException('Runner middleware must return a value before the end.');
         }
 
-        $middleware = array_shift($this->middlewares);
-
+        $middleware = $this->resolver->resolve(array_shift($this->middlewares));
+        
         return call_user_func_array($middleware, [$input, $output, $this]);
     }
 }

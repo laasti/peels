@@ -25,8 +25,8 @@ class HttpRunner extends Runner
             throw new IncompleteRunException('HttpRunner middleware must return a response before the end.');
         }
 
-        $middleware = array_shift($this->middlewares);
-        
+        $middleware = $this->resolver->resolve(array_shift($this->middlewares));
+
         return call_user_func_array($middleware, [$request, $response, $this]);
     }
 }
