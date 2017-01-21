@@ -18,7 +18,7 @@ class HttpRunner extends Runner
      */
     public function __invoke($request, $response)
     {
-        if (! $request instanceof RequestInterface || ! $response instanceof ResponseInterface) {
+        if (!$request instanceof RequestInterface || !$response instanceof ResponseInterface) {
             throw new \InvalidArgumentException('HttpRunner needs its two arguments to be a RequestInterface and a ResponseInterface');
         }
         if (!count($this->middlewares)) {

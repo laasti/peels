@@ -39,7 +39,7 @@ class Runner
         }
 
         $middleware = $this->resolver->resolve(array_shift($this->middlewares));
-        
+
         return call_user_func_array($middleware, [$input, $output, $this]);
     }
 }

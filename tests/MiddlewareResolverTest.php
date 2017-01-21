@@ -4,16 +4,15 @@ namespace Laasti\Peels\Test;
 
 use Laasti\Peels\MiddlewareResolver;
 
-
 class MiddlewareResolverTest extends \PHPUnit_Framework_TestCase
 {
 
-    public static function staticMethod() {
-
+    public static function staticMethod()
+    {
     }
 
-    public function publicMethod() {
-
+    public function publicMethod()
+    {
     }
 
     public function __invoke()
@@ -24,10 +23,14 @@ class MiddlewareResolverTest extends \PHPUnit_Framework_TestCase
     public function testCallables()
     {
         $resolver = new MiddlewareResolver();
-        $this->assertTrue(is_callable($resolver->resolve(function() {})));
+        $this->assertTrue(is_callable($resolver->resolve(function () {
+        })));
         $this->assertTrue(is_callable($resolver->resolve([$this, 'publicMethod'])));
         $this->assertTrue(is_callable($resolver->resolve([$this, 'staticMethod'])));
-        $this->assertTrue(is_callable($resolver->resolve(["Laasti\Peels\Test\MiddlewareResolverTest", 'staticMethod'])));
+        $this->assertTrue(is_callable($resolver->resolve([
+            "Laasti\Peels\Test\MiddlewareResolverTest",
+            'staticMethod'
+        ])));
         $this->assertTrue(is_callable($resolver->resolve("Laasti\Peels\Test\MiddlewareResolverTest::staticMethod")));
         $this->assertTrue(is_callable($resolver->resolve($this)));
     }
@@ -43,9 +46,9 @@ class MiddlewareResolverTest extends \PHPUnit_Framework_TestCase
     {
         $container = $this->getMock('Interop\Container\ContainerInterface');
         $container->expects($this->once())->method('has')->will($this->returnValue(true));
-        $container->expects($this->once())->method('get')->will($this->returnValue(function() {}));
+        $container->expects($this->once())->method('get')->will($this->returnValue(function () {
+        }));
         $resolver = new MiddlewareResolver($container);
         $this->assertTrue(is_callable($resolver->resolve("MyTestContainer")));
     }
-
 }
