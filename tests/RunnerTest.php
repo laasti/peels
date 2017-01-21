@@ -4,7 +4,6 @@ namespace Laasti\Peels\Test;
 
 use Laasti\Peels\Runner;
 
-
 class RunnerTest extends \PHPUnit_Framework_TestCase
 {
     public function testIncompleteRunException()
@@ -15,8 +14,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
                 return $this($x, $y);
             }
         ]);
-        $runner(3,5);
-
+        $runner(3, 5);
     }
 
     public function testBaseRunner()
@@ -43,5 +41,4 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertTrue($runner(1, 1) === 3);
     }
-
 }

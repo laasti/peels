@@ -10,7 +10,7 @@ interface RunnerAwareInterface
     public function getRunner();
 
     /**
-     * 
+     *
      * @param \Laasti\Peels\Runner $runner
      */
     public function setRunner(Runner $runner);

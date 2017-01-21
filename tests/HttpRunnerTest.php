@@ -4,7 +4,6 @@ namespace Laasti\Peels\Test;
 
 use Laasti\Peels\Http\HttpRunner;
 
-
 class HttpRunnerTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -17,7 +16,6 @@ class HttpRunnerTest extends \PHPUnit_Framework_TestCase
             }
         ]);
         $runner(new \Zend\Diactoros\ServerRequest, new \Zend\Diactoros\Response);
-
     }
 
     public function testBaseHttpRunner()
@@ -27,7 +25,8 @@ class HttpRunnerTest extends \PHPUnit_Framework_TestCase
                 return $response;
             }
         ]);
-        $this->assertTrue($runner(new \Zend\Diactoros\ServerRequest, new \Zend\Diactoros\Response) instanceof \Zend\Diactoros\Response);
+        $this->assertTrue($runner(new \Zend\Diactoros\ServerRequest,
+                new \Zend\Diactoros\Response) instanceof \Zend\Diactoros\Response);
     }
 
     public function testMultipleHttpRunner()
@@ -46,5 +45,4 @@ class HttpRunnerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($response->getHeaderLine('test') === 'test');
         $this->assertTrue($response->getHeaderLine('test2') === 'test2');
     }
-
 }

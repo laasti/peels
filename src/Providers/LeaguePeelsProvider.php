@@ -26,7 +26,8 @@ class LeaguePeelsProvider extends AbstractServiceProvider implements BootableSer
         $this->getContainer()->add('Laasti\Peels\Http\HttpRunner')->withArgument('Laasti\Peels\MiddlewareResolverInterface');
         $this->getContainer()->add('Laasti\Peels\Runner')->withArgument('Laasti\Peels\MiddlewareResolverInterface');
         $this->getContainer()->add('Laasti\Peels\MiddlewareResolver')->withArgument('Interop\Container\ContainerInterface');
-        $this->getContainer()->add('Laasti\Peels\MiddlewareResolverInterface', 'Laasti\Peels\MiddlewareResolver')->withArgument('Interop\Container\ContainerInterface');
+        $this->getContainer()->add('Laasti\Peels\MiddlewareResolverInterface',
+            'Laasti\Peels\MiddlewareResolver')->withArgument('Interop\Container\ContainerInterface');
 
         $first = true;
         foreach ($this->getConfig() as $name => $config) {
@@ -34,13 +35,22 @@ class LeaguePeelsProvider extends AbstractServiceProvider implements BootableSer
                 continue;
             }
             $config += $this->defaultConfig;
-            $this->getContainer()->share('peels.'.$name, $config['runner'])
-                    ->withArguments([$config['resolver'], $config['middlewares']]);
+            $this->getContainer()->share('peels.' . $name, $config['runner'])
+                ->withArguments([$config['resolver'], $config['middlewares']]);
             if ($first) {
                 $this->getContainer()->share('kernel', 'Laasti\Http\HttpKernel')->withArgument('peels.http');
                 $first = false;
             }
         }
+    }
+
+    protected function getConfig()
+    {
+        $config = $this->getContainer()->get('config');
+        if (isset($config['peels'])) {
+            return $config['peels'];
+        }
+        return [];
     }
 
     public function provides($alias = null)
@@ -52,14 +62,14 @@ class LeaguePeelsProvider extends AbstractServiceProvider implements BootableSer
             }
 
             foreach ($stacks as $stack) {
-                if ($alias === 'peels.'.$stack) {
+                if ($alias === 'peels.' . $stack) {
                     return true;
                 }
             }
         }
         $stacksAlias = [];
         foreach ($stacks as $stack) {
-            $stacksAlias[] = 'peels.'.$stack;
+            $stacksAlias[] = 'peels.' . $stack;
         }
 
         return array_merge($this->provides, $stacksAlias);
@@ -73,15 +83,6 @@ class LeaguePeelsProvider extends AbstractServiceProvider implements BootableSer
             $config['inflector'] = array_shift($names);
         }
         $this->getContainer()->inflector('Laasti\Directions\RouterAwareInterface')
-             ->invokeMethod('setRouter', ['peels.'.$config['inflector']]);
-    }
-
-    protected function getConfig()
-    {
-        $config = $this->getContainer()->get('config');
-        if (isset($config['peels'])) {
-            return $config['peels'];
-        }
-        return [];
+            ->invokeMethod('setRouter', ['peels.' . $config['inflector']]);
     }
 }
